@@ -17,13 +17,50 @@ function getBasket() {
     }
 }
 
+async function mergeApiLocal() {
+    const products = await searchItems();
+    
 
+    for (basketToShow of getBasket()) {
+        const product = products.filter(p => p._id === basketToShow.id);
+        displayProducts(product[0], basketToShow);
+    }
+return
+}
+
+function displayProducts (products, basketToShow) {
+    const element = document.getElementById("cart__items");
+    let basketArticle = document.createElement("article");
+    basketArticle.classList.add("cart__item");
+    basketArticle.dataset.id = basketToShow.id;
+    basketArticle.dataset.color = basketToShow.colors;
+
+    basketArticle.innerHTML = `<div class="cart__item__img">
+    <img src=${products.imageUrl} alt=${products.altTxt}>
+  </div>
+  <div class="cart__item__content">
+    <div class="cart__item__content__description">
+      <h2>${products.name}</h2>
+      <p>${basketToShow.colors}</p>
+      <p>${products.price}€</p>
+    </div>
+    <div class="cart__item__content__settings">
+      <div class="cart__item__content__settings__quantity">
+        <p>Qté : </p>
+        <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value=${basketToShow.quantity}>
+      </div>
+      <div class="cart__item__content__settings__delete">
+        <p class="deleteItem">Supprimer</p>
+      </div>
+    </div>
+  </div>`
+  element.appendChild(basketArticle);
+}
 
 
 //Fonction "main" pour appeler mes fonctions API et DOM
 async function main() {
-    await searchItems();
-    getBasket();
+    await mergeApiLocal();
     }
     
     //Appel de la fonction "main"
