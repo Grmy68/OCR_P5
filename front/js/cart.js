@@ -74,9 +74,11 @@ function listenQttEvent() {
 
 function changeQttEvent(id, color, quantity) {
   let showBasket = getBasket();
+  console.log(showBasket);
+  console.log(id, color, quantity);
   for(let i in showBasket) {
     
-    if(showBasket[i].id === id && showBasket[i].color === color) {
+    if(showBasket[i].id === id && showBasket[i].colors === color) {
       showBasket[i].quantity = quantity;
       console.log("ici", showBasket);
       setBasket(basket);
@@ -89,6 +91,8 @@ function setBasket() {
   localStorage.setItem("basket", JSON.stringify(basket));
   console.log(basket);
 }
+
+
 
 
 //Fonction "main" pour appeler mes fonctions API et DOM
