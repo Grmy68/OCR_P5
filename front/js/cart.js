@@ -20,7 +20,6 @@ function getBasket() {
 async function mergeApiLocal() {
     const products = await searchItems();
     
-
     for (basketToShow of getBasket()) {
         const product = products.filter(p => p._id === basketToShow.id);
         displayProducts(product[0], basketToShow);
@@ -57,12 +56,47 @@ function displayProducts (products, basketToShow) {
   element.appendChild(basketArticle);
 }
 
+function listenQttEvent() {
+  const changeQttBasket = document.querySelectorAll(".itemQuantity");
+
+  for(let inputQtt of changeQttBasket) {
+    inputQtt.addEventListener("change", function(e) {
+      const parent = e.target.closest("article");
+      const dataId = parent.dataset.id;
+      const dataColor = parent.dataset.color;
+      const valueQtt = parseInt(e.target.value);
+
+      changeQttEvent(dataId, dataColor, valueQtt);
+      console.log(dataId, dataColor, valueQtt);
+    }) 
+  }
+};
+
+function changeQttEvent(id, color, quantity) {
+  let showBasket = getBasket();
+  for(let i in showBasket) {
+    
+    if(showBasket[i].id === id && showBasket[i].color === color) {
+      showBasket[i].quantity = quantity;
+      console.log("ici", showBasket);
+      setBasket(basket);
+      location.reload();
+    }
+  }  
+}
+
+function setBasket() {
+  localStorage.setItem("basket", JSON.stringify(basket));
+  console.log(basket);
+}
+
 
 //Fonction "main" pour appeler mes fonctions API et DOM
 async function main() {
     await mergeApiLocal();
-    }
+    listenQttEvent();
+}
     
-    //Appel de la fonction "main"
+//Appel de la fonction "main"
     main();
     
