@@ -18,7 +18,7 @@ function getBasket() {
 }
 
 // Affichage de la page si le panier client est vide
-function emptyBasket() {
+async function emptyBasket() {
   const spanQtt = document.getElementById("totalQuantity");
   let form = document.querySelector(".cart__order__form");
   const cartContainer = document.getElementById("cartAndFormContainer");
@@ -32,8 +32,6 @@ function emptyBasket() {
               <p>Total (<span id="totalQuantity">0</span> articles) : <span id="totalPrice">0</span> €</p>
             </div>
       </section>`
-  } else {
-    form.style.display = "block";
   }
 }
 
@@ -324,7 +322,7 @@ async function main() {
   await displayTotalPrice();
   formValidation();
   sendForm();
-  emptyBasket();
+  await emptyBasket();
 }
 
 //Appel de la fonction "main" principale
