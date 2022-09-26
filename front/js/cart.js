@@ -32,6 +32,8 @@ function emptyBasket() {
               <p>Total (<span id="totalQuantity">0</span> articles) : <span id="totalPrice">0</span> €</p>
             </div>
       </section>`
+  } else {
+    form.style.display = "block";
   }
 }
 
@@ -199,7 +201,7 @@ const order = document.getElementById("order");
 const firstNameRegex = /^[A-Z a-zé]{3,15}[-]?[A-Z a-zé]{0,10}$/;
 const lastNameRegex = /^[A-Z ]{3,15}[-]?[A-Z ]{0,10}$/;
 const addressRegex = /^[0-9]{1,3},[a-zA-Z0-9\s\,\''\-]*$/;
-const cityRegex = /^[A-Z a-zéèàôâ]{3,15}[-]?[A-Z a-zéèàôâ]{0,10}[-]?[A-Z a-zéèàôâ]{0,10}$/;
+const cityRegex = /^[A-ZÉÀ a-zéèàôâ']{3,15}[-]?[A-ZÉÀ a-zéèàôâ']{0,10}[-]?[A-ZÉÀ a-zéèàôâ']{0,10}$/;
 const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 
 let correct = {
@@ -219,7 +221,8 @@ function formValidation() {
       correct.firstName = false;
     } else {
       correct.firstName = true;
-      document.getElementById("firstNameErrorMsg").textContent = ""; }
+      document.getElementById("firstNameErrorMsg").textContent = "";
+    }
   });
 
   lastName.addEventListener("input", function (e) {
@@ -229,7 +232,8 @@ function formValidation() {
       correct.lastName = false;
     } else {
       correct.lastName = true;
-      document.getElementById("lastNameErrorMsg").textContent = "";    }
+      document.getElementById("lastNameErrorMsg").textContent = "";
+    }
   });
 
   address.addEventListener("input", function (e) {
@@ -239,7 +243,8 @@ function formValidation() {
       correct.address = false;
     } else {
       correct.address = true;
-      document.getElementById("addressErrorMsg").textContent = "";    }
+      document.getElementById("addressErrorMsg").textContent = "";
+    }
   });
 
   city.addEventListener("input", function (e) {
@@ -249,25 +254,66 @@ function formValidation() {
       correct.city = false;
     } else {
       correct.city = true;
-      document.getElementById("cityErrorMsg").textContent = "";    }
+      document.getElementById("cityErrorMsg").textContent = "";
+    }
   });
 
   email.addEventListener("input", function (e) {
     let inputValid = emailRegex.test(e.target.value);
     if (inputValid === false) {
       document.getElementById("emailErrorMsg").textContent = "Indiquer une adresse Email valide, exemple: client@kanap.com";
-      correct.address = false;
+      correct.email = false;
     } else {
       correct.email = true;
-      document.getElementById("emailErrorMsg").textContent = "";    }
+      document.getElementById("emailErrorMsg").textContent = "";
+    }
   });
 }
 
 // Envoyer le formulaire
+function sendForm() {
 
+  let pushOrder = document.getElementById("order");
 
+  pushOrder.addEventListener("click", function (e) {
 
+    if (correct.firstName == true && correct.lastName == true && correct.address == true && correct.city == true && correct.email == true) {
 
+      let productId = JSON.parse(localStorage.getItem("basket"));
+      // Creation du array vide
+      const arrayId = [];
+      // Boucle for in qui récupère les ID des produit dans mon localStorage et push dans l'array
+      for (let i in productId) {
+        arrayId.push(productId[i].id);
+      }
+  
+      const dataOrder = {
+        contact: {
+          firstName: firstName.value,
+          lastName: lastName.value,
+          address: address.value,
+          city: city.value,
+          email: email.value,
+        },
+        products: arrayId,
+      };
+  
+      const headers = new Headers();
+      fetch('http://localhost:3000/api/products/order',
+        {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(dataOrder)
+        })
+        .then (res => res.json())
+        .then (data => {document.location.href = `./confirmation.html?orderId=${data.orderId}`;})
+    } else {
+      alert("Vérifiez le formulaire");
+      e.preventDefault();
+    }
+    
+  })
+}
 
 //Fonction "main" pour appeler mes fonctions API DOM & Evenements
 async function main() {
@@ -277,6 +323,7 @@ async function main() {
   await displayTotalQtt();
   await displayTotalPrice();
   formValidation();
+  sendForm();
   emptyBasket();
 }
 
