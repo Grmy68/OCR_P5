@@ -17,6 +17,23 @@ function getBasket() {
   }
 }
 
+// Affichage de la page si le panier client est vide
+function emptyBasket() {
+  const spanQtt = document.getElementById("totalQuantity");
+  let form = document.querySelector(".cart__order__form");
+  const cartContainer = document.getElementById("cartAndFormContainer");
+  if (spanQtt.textContent == 0) {
+    form.style.display = "none";
+    cartContainer.innerHTML = `<h1>Votre panier est vide</h1>
+    <section class="cart">
+      <section id="cart__items">
+      </section>
+      <div class="cart__price">
+              <p>Total (<span id="totalQuantity">0</span> articles) : <span id="totalPrice">0</span> €</p>
+            </div>
+      </section>`
+  }
+}
 
 async function mergeApiLocal() {
   const products = await searchItems();
@@ -198,60 +215,56 @@ function formValidation() {
   firstName.addEventListener("input", function (e) {
     let inputValid = firstNameRegex.test(e.target.value);
     if (inputValid === false) {
-      firstNameErrorMsg.innerHTML = "Entre 3 et 25 caractères, sans chiffres ni symboles.";
+      document.getElementById("firstNameErrorMsg").textContent = "Entre 3 et 25 caractères, sans chiffres ni symboles.";
       correct.firstName = false;
     } else {
       correct.firstName = true;
-      firstNameErrorMsg.innerHTML = "";
-    }
+      document.getElementById("firstNameErrorMsg").textContent = ""; }
   });
 
   lastName.addEventListener("input", function (e) {
     let inputValid = lastNameRegex.test(e.target.value);
     if (inputValid === false) {
-      lastNameErrorMsg.innerHTML = "Majuscules entre 3 et 25 caractères, sans chiffres ni symboles.";
+      document.getElementById("lastNameErrorMsg").textContent = "Majuscules entre 3 et 25 caractères, sans chiffres ni symboles.";
       correct.lastName = false;
     } else {
       correct.lastName = true;
-      lastNameErrorMsg.innerHTML = "";
-    }
+      document.getElementById("lastNameErrorMsg").textContent = "";    }
   });
 
   address.addEventListener("input", function (e) {
     let inputValid = addressRegex.test(e.target.value);
     if (inputValid === false) {
-      addressErrorMsg.innerHTML = "Indiquer une adresse valide, exemple: 3, rue des mouettes";
+      document.getElementById("addressErrorMsg").textContent = "Indiquer une adresse valide, exemple: 3, rue des mouettes";
       correct.address = false;
     } else {
       correct.address = true;
-      addressErrorMsg.innerHTML = "";
-    }
+      document.getElementById("addressErrorMsg").textContent = "";    }
   });
 
   city.addEventListener("input", function (e) {
     let inputValid = cityRegex.test(e.target.value);
     if (inputValid === false) {
-      cityErrorMsg.innerHTML = "Indiquer une ville valide, exemple: Plombières-les-bains";
+      document.getElementById("cityErrorMsg").textContent = "Indiquer une ville valide, exemple: Plombières-les-bains";
       correct.city = false;
     } else {
       correct.city = true;
-      cityErrorMsg.innerHTML = "";
-    }
+      document.getElementById("cityErrorMsg").textContent = "";    }
   });
 
   email.addEventListener("input", function (e) {
     let inputValid = emailRegex.test(e.target.value);
     if (inputValid === false) {
-      emailErrorMsg.innerHTML = "Indiquer une adresse Email valide, exemple: client@kanap.com";
+      document.getElementById("emailErrorMsg").textContent = "Indiquer une adresse Email valide, exemple: client@kanap.com";
       correct.address = false;
     } else {
       correct.email = true;
-      emailErrorMsg.innerHTML = "";
-    }
+      document.getElementById("emailErrorMsg").textContent = "";    }
   });
 }
 
 // Envoyer le formulaire
+
 
 
 
@@ -264,6 +277,7 @@ async function main() {
   await displayTotalQtt();
   await displayTotalPrice();
   formValidation();
+  emptyBasket();
 }
 
 //Appel de la fonction "main" principale
