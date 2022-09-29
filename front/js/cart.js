@@ -17,7 +17,7 @@ function getBasket() {
   }
 }
 
-// Affichage de la page si le panier client est vide
+// Masquer formulaire si le panier client est vide
 async function emptyBasket() {
   const spanQtt = document.getElementById("totalQuantity");
   let form = document.querySelector(".cart__order__form");
@@ -284,7 +284,7 @@ function sendForm() {
       for (let i in productId) {
         arrayId.push(productId[i].id);
       }
-  
+
       const dataOrder = {
         contact: {
           firstName: firstName.value,
@@ -295,21 +295,21 @@ function sendForm() {
         },
         products: arrayId,
       };
-  
+
       const headers = new Headers();
       fetch('http://localhost:3000/api/products/order',
         {
           method: 'POST',
-          headers: {'Content-Type': 'application/json'},
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(dataOrder)
         })
-        .then (res => res.json())
-        .then (data => {document.location.href = `./confirmation.html?orderId=${data.orderId}`;})
+        .then(res => res.json())
+        .then(data => { document.location.href = `./confirmation.html?orderId=${data.orderId}`; })
     } else {
       alert("Vérifiez le formulaire");
       e.preventDefault();
     }
-    
+
   })
 }
 

@@ -3,12 +3,12 @@ const numberOrder = new URL(location.href).searchParams.get("orderId")
 
 // Injection de orderId récupérer avec searchParams dans le code HTML
 function displayOrderId() {
-document.getElementById("orderId").textContent = `${numberOrder}`;
+    document.getElementById("orderId").textContent = `${numberOrder}`;
 }
 
 // Remove du localStorage
 function clearBasket() {
-localStorage.removeItem("basket");
+    localStorage.removeItem("basket");
 }
 
 displayOrderId();
